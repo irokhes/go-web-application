@@ -6,15 +6,23 @@ import (
 	"net/http"
 	"os"
 	"text/template"
+	"web-application/viewmodel"
 )
 
 func main() {
 	templates := populateTemplates()
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		requestedPath := r.URL.Path[1:]
-		t := templates[requestedPath+".html"]
-		if t != nil {
-			err := t.Execute(w, nil)
+		template := templates[requestedPath+".html"]
+		var context interface{}
+		switch requestedPath {
+		case "shop":
+			context = viewmodel.NewShop()
+		default:
+			context = viewmodel.NewBase()
+		}
+		if template != nil {
+			err := template.Execute(w, context)
 			if err != nil {
 				log.Println(err)
 			}
