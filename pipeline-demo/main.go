@@ -5,26 +5,26 @@ import (
 	"os"
 )
 
-const tax = 21.3/100
+const tax = 21.3 / 100
 
 type Product struct {
-	Name string
+	Name  string
 	Price float32
-}
-
-func (p Product) PriceWithTax() float32 {
-	return p.Price * (1 + tax)
 }
 
 const templateString = `
 {{- "Item Information" }}
 Name {{.Name}}
 Price {{ printf "$%.2f" .Price}}
-Price with tax: {{.PriceWithTax | printf "$%.2f" }}
+Price with tax: {{ calctax .Price | printf "$%.2f" }}
 `
 
 func main() {
 	p := Product{Name: "Lemonade", Price: 2.20}
-	t := template.Must(template.New("").Parse(templateString))
+	fm := template.FuncMap{}
+	fm["calctax"] = func(price float32) float32 {
+		return price * (1 + tax)
+	}
+	t := template.Must(template.New("").Funcs(fm).Parse(templateString))
 	t.Execute(os.Stdout, p)
 }
