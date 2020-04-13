@@ -19,7 +19,7 @@ func main() {
 		case "shop":
 			context = viewmodel.NewShop()
 		default:
-			context = viewmodel.NewBase()
+			context = viewmodel.NewHome()
 		}
 		if template != nil {
 			err := template.Execute(w, context)
