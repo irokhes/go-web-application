@@ -6,8 +6,9 @@ type Home struct {
 }
 
 func NewHome() Home {
-	return Home{
-		Title:  "Lemonade Standard Supply",
+	result := Home{
 		Active: "home",
+		Title:  "Lemonade Stand Supply",
 	}
+	return result
 }

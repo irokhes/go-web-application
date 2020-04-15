@@ -1,38 +1,16 @@
 package main
 
 import (
+	"html/template"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"os"
-	"text/template"
-	"web-application/viewmodel"
+	"web-application/controller"
 )
 
 func main() {
 	templates := populateTemplates()
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		requestedPath := r.URL.Path[1:]
-		template := templates[requestedPath+".html"]
-		var context interface{}
-		switch requestedPath {
-		case "shop":
-			context = viewmodel.NewShop()
-		default:
-			context = viewmodel.NewHome()
-		}
-		if template != nil {
-			err := template.Execute(w, context)
-			if err != nil {
-				log.Println(err)
-			}
-		} else {
-			w.WriteHeader(http.StatusNotFound)
-		}
-	})
-	http.Handle("/img/", http.FileServer(http.Dir("public")))
-	http.Handle("/css/", http.FileServer(http.Dir("public")))
-
+	controller.Startup(templates)
 	http.ListenAndServe(":8080", nil)
 }
 
