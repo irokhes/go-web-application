@@ -12,3 +12,9 @@ func NewStandLocator() StandLocator {
 	}
 	return result
 }
+
+type StandCoordinate struct {
+	Title     string  `json:"title"`
+	Latitude  float32 `json:"latitude"`
+	Longitude float32 `json:"longitude"`
+}
