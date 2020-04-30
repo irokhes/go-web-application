@@ -5,7 +5,7 @@ import (
 	"html/template"
 	"log"
 	"net/http"
-	"time"
+	"web-application/model"
 	"web-application/viewmodel"
 )
 
@@ -23,11 +23,8 @@ func (h home) registerRoutes() {
 func (h home) handleHome(w http.ResponseWriter, r *http.Request) {
 	vm := viewmodel.NewHome()
 	w.Header().Add("Content-Type", "text/html")
-	time.Sleep(4 * time.Second)
 	h.homeTemplate.Execute(w, vm)
-
 }
-
 func (h home) handleLogin(w http.ResponseWriter, r *http.Request) {
 	vm := viewmodel.NewLogin()
 	if r.Method == http.MethodPost {
@@ -37,9 +34,11 @@ func (h home) handleLogin(w http.ResponseWriter, r *http.Request) {
 		}
 		email := r.Form.Get("email")
 		password := r.Form.Get("password")
-		if email == "test@gmail.com" && password == "pass" {
+		if user, err := model.Login(email, password); err == nil {
+			log.Printf("User has logged in: %v\n", user)
 			http.Redirect(w, r, "/home", http.StatusTemporaryRedirect)
 		} else {
+			log.Printf("Failed to log user in with email: %v, error was %v\n", email, err)
 			vm.Email = email
 			vm.Password = password
 		}

@@ -1,0 +1,13 @@
+
+version: "3"
+services:
+    pg:
+        image: postgres:10-alpine
+        restart: always
+        environment:
+            - POSTGRES_DB=lemonadesupply
+            - POSTGRES_USER=root
+            - POSTGRES_PASSWORD=pass
+            - POSTGRES_HOST_AUTH_METHOD=trust
+        ports:
+            - "5432:5432"
